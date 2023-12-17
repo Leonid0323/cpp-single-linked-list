@@ -138,19 +138,12 @@ public:
     }
     
      SingleLinkedList(std::initializer_list<Type> values) {
-        for (auto it = values.end() - 1; it >= values.begin(); --it) {
-            PushFront(*it);
-        }
+        CopyValue(values);
     }
 
     SingleLinkedList(const SingleLinkedList& other) {
         assert(size_ == 0 && head_.next_node == nullptr);
-        SingleLinkedList tmp;
-        Iterator head_it{ &tmp.head_ };
-        for (auto it = other.begin(); it != other.end(); ++it) {
-            head_it = tmp.InsertAfter(head_it, *it);
-        }
-        swap(tmp);
+        CopyValue(other);
     }
 
     SingleLinkedList& operator=(const SingleLinkedList& rhs) {
@@ -280,6 +273,17 @@ private:
     // Фиктивный узел, используется для вставки "перед первым элементом"
     Node head_;
     size_t size_ = 0;
+    
+    template<typename T>
+    void CopyValue(T& other){
+        SingleLinkedList tmp;
+        
+        Iterator head_it{ &tmp.head_ };
+        for (auto it = other.begin(); it != other.end(); ++it) {
+            head_it = tmp.InsertAfter(head_it, *it);
+        }
+        swap(tmp);
+    }
 };
 
 template <typename Type>
